@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EMS2.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,6 +14,12 @@ namespace EMS2.Controllers
     [ApiController]
     public class PatientController : ControllerBase
     {
+        private PatientDAL DAL;
+        public PatientController(IConfiguration configuration)
+        {
+            var conn = configuration["ConnectionStrings:DefaultConnection"];
+            DAL = PatientDAL.GetInst(conn);
+        }
         // GET: api/<PatientController>
         [HttpGet]
         public IEnumerable<string> Get()
