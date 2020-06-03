@@ -24,6 +24,7 @@ namespace EMS2.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            
             return new string[] { "value1", "value2" };
         }
 
@@ -36,8 +37,9 @@ namespace EMS2.Controllers
 
         // POST api/<PatientController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Patient value)
         {
+
         }
 
         // PUT api/<PatientController>/5
