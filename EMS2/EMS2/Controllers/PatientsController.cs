@@ -14,9 +14,9 @@ namespace EMS2.Controllers
     [ApiController]
     public class PatientsController : ControllerBase
     {
-        private readonly PatientContext _context;
+        private readonly EMSContext _context;
 
-        public PatientsController(PatientContext context)
+        public PatientsController(EMSContext context)
         {
             _context = context;
         }
