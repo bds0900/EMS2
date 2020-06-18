@@ -19,6 +19,27 @@ namespace EMS2.Controllers
         public PatientsController(EMSContext context)
         {
             _context = context;
+            /*if (_context.Patients.Local.Count==0)
+            {
+                _context.Patients.Add(new Patient
+                {
+                    HCN = "123456789AA",
+                    LastName = "Beak",
+                    FirstName = "Doosan",
+                    MInitial = "",
+                    DateBirth = "09151990",
+                    Sex = "M",
+                    HeadOfHouse = "123456789AA",
+                    AddressLine1 = "300C Bluevale St N",
+                    AddressLine2 = "",
+                    City = "Waterloo",
+                    Province = "ON",
+                    PostalCode = "N2J 4G3",
+                    PhoneNumber = "2268688988"
+                });
+                _context.SaveChanges();
+            }*/
+            
         }
 
         // GET: api/Patients
@@ -26,6 +47,7 @@ namespace EMS2.Controllers
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
             return await _context.Patients.ToListAsync();
+            
         }
 
         // GET: api/Patients/5
