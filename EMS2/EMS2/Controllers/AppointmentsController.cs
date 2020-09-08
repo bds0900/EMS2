@@ -23,30 +23,39 @@ namespace EMS2.Controllers
 
         // GET: api/Appointments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments()
+        public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAppointments()
         {
-            return await _context.Appointments.ToListAsync();
+            return await _context.Appointments
+                .Select(x => ItemToDTO(x))
+                .ToListAsync();
         }
 
         // GET: api/Appointments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Appointment>> GetAppointment(int id)
+        public async Task<ActionResult<AppointmentDTO>> GetAppointment(string id)
         {
-            var appointment = await _context.Appointments.FindAsync(id);
+            var patient = await _context.Patients.FindAsync(id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            var appointment = await _context.Appointments
+                .Where(x => x.PatientID1 == patient.HCN && x.AppointmentDate>=DateTime.Today)
+                .FirstOrDefaultAsync();
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            return appointment;
+            return ItemToDTO(appointment);
         }
 
         // PUT: api/Appointments/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAppointment(int id, Appointment appointment)
+        public async Task<IActionResult> PutAppointment(string id, AppointmentDTO appointment)
         {
             if (id != appointment.AppointmentID)
             {
@@ -78,9 +87,21 @@ namespace EMS2.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
+        public async Task<ActionResult<Appointment>> PostAppointment(AppointmentDTO appointment)
         {
-            _context.Appointments.Add(appointment);
+            var val = new Validation(_context);
+            await val.IsValidID(appointment.PatientID1);
+
+            if (val.IsWeekend(appointment.AppointmentDate) && appointment.AppointmentSlot > 2)
+                ModelState.AddModelError("AppointmentSlot", $" { appointment.AppointmentSlot} is not applicable on week end.");
+            
+            if (!val.IsValidDay(appointment.AppointmentDate))
+                ModelState.AddModelError("AppointmentDate", $" { appointment.AppointmentDate} is earlier than today or later than 3 month from today.");
+            
+            if (!val.IsValidSlot(appointment))
+                ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { appointment.AppointmentSlot} is occupied.");
+
+            _context.Appointments.Add(CreateAppointment(appointment));
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAppointment", new { id = appointment.AppointmentID }, appointment);
@@ -102,9 +123,32 @@ namespace EMS2.Controllers
             return appointment;
         }
 
-        private bool AppointmentExists(int id)
+        private bool AppointmentExists(string id)
         {
             return _context.Appointments.Any(e => e.AppointmentID == id);
         }
+
+        private static AppointmentDTO ItemToDTO(Appointment todoItem) =>
+        new AppointmentDTO
+        {
+            AppointmentID = todoItem.AppointmentID,
+            AppointmentDate = todoItem.AppointmentDate,
+            AppointmentSlot = todoItem.AppointmentSlot,
+            PatientID1=todoItem.PatientID1,
+            PatientID2=todoItem.PatientID2,
+            NumberOfPatients=todoItem.NumberOfPatients
+        };
+        private static Appointment CreateAppointment(AppointmentDTO appointmentDTO)=>
+        new Appointment
+        {
+            AppointmentID = Guid.NewGuid().ToString("B").ToUpper(),
+            NumberOfPatients = appointmentDTO.NumberOfPatients,
+            AppointmentDate = appointmentDTO.AppointmentDate,
+            AppointmentSlot = appointmentDTO.AppointmentSlot,
+            PatientID1 = appointmentDTO.PatientID1,
+            PatientID2 = appointmentDTO.PatientID2,
+            Encounter = false,
+            NextAppointment = null
+        };
     }
 }
