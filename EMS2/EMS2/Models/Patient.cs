@@ -17,6 +17,7 @@ namespace EMS2
         public string MInitial { get; set; }
         [Required]
         public string DateBirth { get; set; }
+        [Required]
         public string Sex { get; set; }
         public string HeadOfHouse { get; set; }
         public string AddressLine1 { get; set; }
