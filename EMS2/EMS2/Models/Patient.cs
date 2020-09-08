@@ -10,9 +10,12 @@ namespace EMS2
     {
         [Key]
         public string HCN { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public string FirstName { get; set; }
         public string MInitial { get; set; }
+        [Required]
         public string DateBirth { get; set; }
         public string Sex { get; set; }
         public string HeadOfHouse { get; set; }
