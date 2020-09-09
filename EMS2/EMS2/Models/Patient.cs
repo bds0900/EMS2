@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace EMS2
         public string FirstName { get; set; }
         public string MInitial { get; set; }
         [Required]
-        public string DateBirth { get; set; }
+        public DateTime DateBirth { get; set; }
         [Required]
         public string Sex { get; set; }
         public string HeadOfHouse { get; set; }

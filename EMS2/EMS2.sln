@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMS2", "EMS2\EMS2.csproj", "{17A04CC8-63C6-4C4D-94E2-6AD30B51D70D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS2", "EMS2\EMS2.csproj", "{17A04CC8-63C6-4C4D-94E2-6AD30B51D70D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMS2.Demographics", "Demographics\EMS2.Demographics.csproj", "{EE815C03-A495-4BF4-ACAC-FB12A3A4F67B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{17A04CC8-63C6-4C4D-94E2-6AD30B51D70D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17A04CC8-63C6-4C4D-94E2-6AD30B51D70D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17A04CC8-63C6-4C4D-94E2-6AD30B51D70D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE815C03-A495-4BF4-ACAC-FB12A3A4F67B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE815C03-A495-4BF4-ACAC-FB12A3A4F67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE815C03-A495-4BF4-ACAC-FB12A3A4F67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE815C03-A495-4BF4-ACAC-FB12A3A4F67B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
