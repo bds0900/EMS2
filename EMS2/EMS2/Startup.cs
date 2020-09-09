@@ -22,7 +22,7 @@ namespace EMS2
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EMSContext>(opt =>
-               opt.UseInMemoryDatabase("PatientList"));
+               opt.UseInMemoryDatabase("EMSDB"));
 
             services.AddControllersWithViews();
 

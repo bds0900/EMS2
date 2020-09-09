@@ -37,6 +37,7 @@ namespace EMS2.Demographics
         }
         public void Add(string HCN,string lastName,string firstName,string mInitial,DateTime DateOfBirth,string sex,string HOH)
         {
+            Patient patient=new Patient { HCN = HCN,LastName=lastName,FirstName=firstName,MInitial=mInitial,DateBirth=DateOfBirth,Sex=sex, }
 
         }
     }

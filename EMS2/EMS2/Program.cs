@@ -13,7 +13,9 @@ namespace EMS2
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host=CreateHostBuilder(args).Build();
+            SeedData.Seed();
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
