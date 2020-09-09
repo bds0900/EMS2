@@ -31,4 +31,10 @@
   </ItemGroup>
 
 
+  <ItemGroup>
+    <ProjectReference Include="..\EMS2.Data\EMS2.Data.csproj" />
+    <ProjectReference Include="..\EMS2.Demographics\EMS2.Demographics.csproj" />
+  </ItemGroup>
+
+
 </Project>

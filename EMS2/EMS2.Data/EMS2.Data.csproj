@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EMS2.Data\EMS2.Data.csproj" />
     <ProjectReference Include="..\EMS2.Models\EMS2.Models.csproj" />
   </ItemGroup>
 

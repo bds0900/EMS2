@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EMS2;
 using EMS2.Models;
+using EMS2.Data;
 
 namespace EMS2.Controllers
 {

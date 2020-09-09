@@ -1,4 +1,5 @@
-﻿using EMS2.Models;
+﻿using EMS2.Data;
+using EMS2.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

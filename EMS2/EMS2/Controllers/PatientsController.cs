@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EMS2;
 using EMS2.Models;
+using EMS2.Demographics;
+using EMS2.Data;
 
 namespace EMS2.Controllers
 {
@@ -15,37 +16,20 @@ namespace EMS2.Controllers
     public class PatientsController : ControllerBase
     {
         private readonly EMSContext _context;
+        private PatientManager _manager;
 
         public PatientsController(EMSContext context)
         {
             _context = context;
-            /*if (_context.Patients.Local.Count==0)
-            {
-                _context.Patients.Add(new Patient
-                {
-                    HCN = "123456789AA",
-                    LastName = "Beak",
-                    FirstName = "Doosan",
-                    MInitial = "",
-                    DateBirth = "09151990",
-                    Sex = "M",
-                    HeadOfHouse = "123456789AA",
-                    AddressLine1 = "300C Bluevale St N",
-                    AddressLine2 = "",
-                    City = "Waterloo",
-                    Province = "ON",
-                    PostalCode = "N2J 4G3",
-                    PhoneNumber = "2268688988"
-                });
-                _context.SaveChanges();
-            }*/
-            
+            _manager = new PatientManager(context);
+                        
         }
 
         // GET: api/Patients
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
         {
+            return await _manager.GetMembers("1234567890KV");
             return await _context.Patients.ToListAsync();
             
         }
@@ -54,7 +38,7 @@ namespace EMS2.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Patient>> GetPatient(string id)
         {
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = _manager.GetMember(id);
 
             if (patient == null)
             {

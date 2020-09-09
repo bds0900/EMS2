@@ -1,4 +1,5 @@
 ﻿using EMS2;
+using EMS2.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace EMS2.Demographics
 {
-    public class Validation
+    public class PatientValidation
     {
         private readonly DbSet<Patient> _context;
-        public Validation(DbSet<Patient> context)
+        public PatientValidation(DbSet<Patient> context)
         {
             _context = context;
         }

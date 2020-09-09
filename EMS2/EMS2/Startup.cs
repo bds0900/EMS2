@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using EMS2.Models;
+using EMS2.Data;
+
 namespace EMS2
 {
     public class Startup

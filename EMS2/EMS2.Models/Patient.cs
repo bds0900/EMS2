@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EMS2
+namespace EMS2.Models
 {
     public class Patient
     {
