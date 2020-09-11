@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EMS2;
 using EMS2.Models;
 using EMS2.Data;
+using EMS2.Scheduling;
+using EMS2.Demographics;
 
 namespace EMS2.Controllers
 {
@@ -16,47 +17,31 @@ namespace EMS2.Controllers
     public class AppointmentsController : ControllerBase
     {
         private readonly EMSContext _context;
+        private AppointmentManager manager;
+        private AppointmentValidation validator;
+        private PatientValidation patientValidator;
 
         public AppointmentsController(EMSContext context)
         {
             _context = context;
+            manager = new AppointmentManager(context);
+            validator = new AppointmentValidation(context.Appointments);
+            patientValidator = new PatientValidation(context.Patients);
         }
 
         // GET: api/Appointments
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAppointments()
-        {
-            return await _context.Appointments
-                .Select(x => ItemToDTO(x))
-                .ToListAsync();
-        }
-
-        // GET: api/Appointments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppointmentDTO>> GetAppointment(string id)
+        public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments(string patientID)
         {
-            var patient = await _context.Patients.FindAsync(id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-            var appointment = await _context.Appointments
-                .Where(x => x.PatientID1 == patient.HCN && x.AppointmentDate>=DateTime.Today)
-                .FirstOrDefaultAsync();
-
-            if (appointment == null)
-            {
-                return NotFound();
-            }
-
-            return ItemToDTO(appointment);
+            return await manager.GetAllAppointments(patientID);
         }
+
 
         // PUT: api/Appointments/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAppointment(string id, AppointmentDTO appointment)
+        public async Task<IActionResult> PutAppointment(string id, Appointment appointment)
         {
             if (id != appointment.AppointmentID)
             {
@@ -88,21 +73,20 @@ namespace EMS2.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Appointment>> PostAppointment(AppointmentDTO appointment)
+        public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
         {
-            var val = new Validation(_context);
-            await val.IsValidID(appointment.PatientID1);
+            await patientValidator.IsValidID(appointment.PatientID);
 
-            if (val.IsWeekend(appointment.AppointmentDate) && appointment.AppointmentSlot > 2)
+            if (validator.IsWeekend(appointment.AppointmentDate) && appointment.AppointmentSlot > 2)
                 ModelState.AddModelError("AppointmentSlot", $" { appointment.AppointmentSlot} is not applicable on week end.");
             
-            if (!val.IsValidDay(appointment.AppointmentDate))
+            if (!validator.IsValidDay(appointment.AppointmentDate))
                 ModelState.AddModelError("AppointmentDate", $" { appointment.AppointmentDate} is earlier than today or later than 3 month from today.");
             
-            if (!val.IsValidSlot(appointment))
+            if (!validator.IsEmptySlot(appointment.AppointmentDate,appointment.AppointmentSlot).Result)
                 ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { appointment.AppointmentSlot} is occupied.");
 
-            _context.Appointments.Add(CreateAppointment(appointment));
+            _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAppointment", new { id = appointment.AppointmentID }, appointment);
@@ -129,27 +113,5 @@ namespace EMS2.Controllers
             return _context.Appointments.Any(e => e.AppointmentID == id);
         }
 
-        private static AppointmentDTO ItemToDTO(Appointment todoItem) =>
-        new AppointmentDTO
-        {
-            AppointmentID = todoItem.AppointmentID,
-            AppointmentDate = todoItem.AppointmentDate,
-            AppointmentSlot = todoItem.AppointmentSlot,
-            PatientID1=todoItem.PatientID1,
-            PatientID2=todoItem.PatientID2,
-            NumberOfPatients=todoItem.NumberOfPatients
-        };
-        private static Appointment CreateAppointment(AppointmentDTO appointmentDTO)=>
-        new Appointment
-        {
-            AppointmentID = Guid.NewGuid().ToString("B").ToUpper(),
-            NumberOfPatients = appointmentDTO.NumberOfPatients,
-            AppointmentDate = appointmentDTO.AppointmentDate,
-            AppointmentSlot = appointmentDTO.AppointmentSlot,
-            PatientID1 = appointmentDTO.PatientID1,
-            PatientID2 = appointmentDTO.PatientID2,
-            Encounter = false,
-            NextAppointment = null
-        };
     }
 }
