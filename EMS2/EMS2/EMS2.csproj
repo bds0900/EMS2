@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EMS2.Data\EMS2.Data.csproj" />
     <ProjectReference Include="..\EMS2.Demographics\EMS2.Demographics.csproj" />
+    <ProjectReference Include="..\EMS2.Scheduling\EMS2.Scheduling.csproj" />
   </ItemGroup>
 
 
