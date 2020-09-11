@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EMS2.Models
 {
-    public class Appointment
+    public class Schedule
     {
         [Key]
+        public string ScheduleID { get; set; }
         public string AppointmentID { get; set; }
-        public DateTime AppointmentDate { get; set; }
-        public int AppointmentSlot { get; set; }
-        public bool Encounter { get; set; }
-        public Appointment NextAppointment { get; set; }
+        public string PatientID { get; set; }
     }
 }
