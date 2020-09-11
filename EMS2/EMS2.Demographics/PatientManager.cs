@@ -10,16 +10,19 @@ namespace EMS2.Demographics
 {
     public class PatientManager
     {
-        public EMSContext _context;
+        private EMSContext _context;
+        private PatientValidation validator;
         public PatientManager(EMSContext context)
         {
             _context = context;
+            validator = new PatientValidation(context.Patients);
+
         }
         public Task<List<Patient>> GetMembers(string HeadOfHouse)
         {
             return _context.Patients.Where(p => p.HeadOfHouse == HeadOfHouse).ToListAsync();
         }
-        public Patient GetMember(string HCN)
+        public Patient GetPatient(string HCN)
         {
            return _context.Patients.FindAsync(HCN).Result;
         }
@@ -34,10 +37,19 @@ namespace EMS2.Demographics
         }
         public void Add(Patient patient)
         {
+            validator.IsValidName(patient.FirstName, patient.LastName);
+            validator.IsValidDOB(patient.DateBirth);
+            validator.IsValidAdditionalInfo(patient);
+            validator.IsValidSex(patient.Sex);
+            if(patient.HeadOfHouse!=null)
+            {
+                validator.IsValidHeadOfHous(patient.HeadOfHouse);
+            }
+            
             _context.Patients.Add(patient);
             _context.SaveChanges();
         }
-        public void Add(string HCN,string lastName,string firstName,string mInitial,DateTime DateOfBirth,string sex,string HOH)
+        public void Add(string HCN,string lastName,string firstName,string mInitial,DateTime DateOfBirth,SEX sex,string HOH)
         {
             var headOfHouse=_context.Patients.Find(HOH);
             if (headOfHouse != null)
@@ -62,5 +74,6 @@ namespace EMS2.Demographics
                 Add(patient);
             }
         }
+       
     }
 }
