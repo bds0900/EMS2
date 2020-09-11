@@ -16,6 +16,7 @@ namespace EMS2.Data
 
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Billing> Billing { get; set; }
     }
 }
