@@ -22,9 +22,9 @@ namespace EMS2.Demographics
         {
             return _context.Patients.Where(p => p.HeadOfHouse == HeadOfHouse).ToListAsync();
         }
-        public Patient GetPatient(string HCN)
+        public async Task<Patient> GetPatient(string HCN)
         {
-           return _context.Patients.FindAsync(HCN).Result;
+           return await _context.Patients.FindAsync(HCN);
         }
         public bool IsExist(string HCN)
         {
