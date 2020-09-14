@@ -1,0 +1,18 @@
+﻿@*
+Layout pages are typically named _Layout.cshtml, the leading underscore preventing them from being browsed directly.
+By default, every layout must call RenderBody. 
+Wherever the call to RenderBody is placed, the contents of the view will be rendered.
+*@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link href="/css/site.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>
