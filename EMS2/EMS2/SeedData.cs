@@ -35,7 +35,7 @@ namespace EMS2
                             LastName = "Doosan",
                             FirstName = "Beak",
                             DateBirth = new DateTime(1990, 9, 15),
-                            Sex = "M",
+                            Sex = SEX.M,
                             AddressLine1 = "300C Bluevlae North Street",
                             AddressLine2 = "",
                             City = "Waterloo",
