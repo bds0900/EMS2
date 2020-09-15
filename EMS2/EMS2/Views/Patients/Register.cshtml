@@ -1,0 +1,53 @@
+﻿@model EMS2.Models.Patient
+
+<form asp-controller="Patients" asp-action="Register" method="post">
+    <div>
+        <label asp-for="HCN">HCN</label>
+        <input asp-for="HCN" />
+    </div>
+    <div>
+        <label asp-for="LastName">Last Name</label>
+        <input asp-for="LastName" />
+    </div>
+    <div>
+        <label asp-for="FirstName">First Name</label>
+        <input asp-for="FirstName" />
+    </div>
+    <div>
+        <label asp-for="MInitial">Middle Name Initial </label>
+        <input asp-for="MInitial" />
+    </div>
+    <div>
+        <label asp-for="DateBirth">Date of Birth</label>
+        <input asp-for="DateBirth" />
+    </div>
+    <div>
+        <label asp-for="HeadOfHouse">Head of House </label>
+        <input asp-for="HeadOfHouse" />
+    </div>
+    <div>
+        <label asp-for="AddressLine1">Address Line1 </label>
+        <input asp-for="AddressLine1" />
+    </div>
+    <div>
+        <label asp-for="AddressLine2">Address Line2</label>
+        <input asp-for="AddressLine2" />
+    </div>
+    <div>
+        <label asp-for="City">City</label>
+        <input asp-for="City" />
+    </div>
+    <div>
+        <label asp-for="Province">Province</label>
+        <input asp-for="Province" />
+    </div>
+    <div>
+        <label asp-for="PostalCode">Postal Code</label>
+        <input asp-for="PostalCode" />
+    </div>
+    <div>
+        <label asp-for="PhoneNumber">Phone Number</label>
+        <input asp-for="PhoneNumber" />
+    </div>
+    <button type="submit">submit</button>
+</form>
