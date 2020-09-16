@@ -30,6 +30,46 @@ namespace EMS2.Scheduling
                           select appt)
                          .ToListAsync();
         }
+        public async Task<Appointment> ScheduleAppointment(DateTime date,int slot,string patientID)
+        {
+            Appointment appointment = new Appointment
+            {
+                AppointmentID = Guid.NewGuid().ToString(),
+                AppointmentDate = date,
+                AppointmentSlot=slot,
+                Encounter=false
+            };
+
+            Schedule schedule = new Schedule 
+            {
+                ScheduleID = Guid.NewGuid().ToString(), 
+                AppointmentID= appointment.AppointmentID, 
+                PatientID=patientID 
+            };
+            await _context.Appointments.AddAsync(appointment);
+            await _context.Schedules.AddAsync(schedule);
+            await _context.SaveChangesAsync();
+            return appointment;
+
+        }
+        public async Task<Appointment> ScheduleAppointment(DateTime date, int slot, string patientID,string patientID2)
+        {
+
+            var appointment=await ScheduleAppointment(date, slot, patientID);
+            Schedule schedule = new Schedule
+            {
+                ScheduleID = Guid.NewGuid().ToString(),
+                AppointmentID = appointment.AppointmentID,
+                PatientID = patientID2
+            };
+            await _context.Schedules.AddAsync(schedule);
+            await _context.SaveChangesAsync();
+            return appointment;
+        }
+
+
+
+
         public async Task Add(Appointment appt)
         {
             await _context.Appointments.AddAsync(appt);
