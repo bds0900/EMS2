@@ -12,9 +12,8 @@ using EMS2.Demographics;
 
 namespace EMS2.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AppointmentsController : ControllerBase
+    [Route("[controller]")]
+    public class AppointmentsController : Controller
     {
         private readonly EMSContext _context;
         private AppointmentManager manager;
@@ -28,8 +27,12 @@ namespace EMS2.Controllers
             validator = new AppointmentValidation(context.Appointments);
             patientValidator = new PatientValidation(context.Patients);
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View("CreateAppointment");
+        }
 
-        // GET: api/Appointments
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments(string patientID)
         {
@@ -37,9 +40,6 @@ namespace EMS2.Controllers
         }
 
 
-        // PUT: api/Appointments/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAppointment(string id, Appointment appointment)
         {
@@ -69,27 +69,36 @@ namespace EMS2.Controllers
             return NoContent();
         }
 
-        // POST: api/Appointments
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Appointment>> PostAppointment(Appointment appointment)
+        public async Task<ActionResult<Appointment>> ScheduleAppointment(AppointmentViewModel vm)
         {
-            await patientValidator.IsValidID(appointment.PatientID);
+            if (validator.IsWeekend(vm.AppointmentDate) && vm.AppointmentSlot > 2)
+                ModelState.AddModelError("AppointmentSlot", $" { vm.AppointmentSlot} is not applicable on week end.");
 
-            if (validator.IsWeekend(appointment.AppointmentDate) && appointment.AppointmentSlot > 2)
-                ModelState.AddModelError("AppointmentSlot", $" { appointment.AppointmentSlot} is not applicable on week end.");
+            if (!validator.IsValidDay(vm.AppointmentDate))
+                ModelState.AddModelError("AppointmentDate", $" { vm.AppointmentDate} is earlier than today or later than 3 month from today.");
+
+            if (!validator.IsEmptySlot(vm.AppointmentDate, vm.AppointmentSlot).Result)
+                ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { vm.AppointmentSlot} is occupied.");
             
-            if (!validator.IsValidDay(appointment.AppointmentDate))
-                ModelState.AddModelError("AppointmentDate", $" { appointment.AppointmentDate} is earlier than today or later than 3 month from today.");
-            
-            if (!validator.IsEmptySlot(appointment.AppointmentDate,appointment.AppointmentSlot).Result)
-                ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { appointment.AppointmentSlot} is occupied.");
+            if(!await patientValidator.IsValidID(vm.PatientID1))
+            {
+                ModelState.AddModelError("PatientID1", $" PatientID1 is not valid.");
+            }
+            else if (vm.Double && !await patientValidator.IsValidID(vm.PatientID2))
+            {
+                ModelState.AddModelError("PatientID1", $" PatientID1 is not valid.");
+            }
+            else if(vm.Double)
+            {
+                return await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1,vm.PatientID2);
+            }
+            else
+            {
+                return await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1);
+            }
 
-            _context.Appointments.Add(appointment);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAppointment", new { id = appointment.AppointmentID }, appointment);
+            return NoContent();
         }
 
         // DELETE: api/Appointments/5
@@ -111,6 +120,11 @@ namespace EMS2.Controllers
         private bool AppointmentExists(string id)
         {
             return _context.Appointments.Any(e => e.AppointmentID == id);
+        }
+        private void BuildSchedule(AppointmentViewModel vm)
+        {
+
+
         }
 
     }

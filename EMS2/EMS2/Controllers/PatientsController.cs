@@ -11,9 +11,7 @@ using EMS2.Data;
 
 namespace EMS2.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PatientsController : ControllerBase
+    public class PatientsController : Controller
     {
         private readonly EMSContext _context;
         private PatientManager _manager;
@@ -22,69 +20,36 @@ namespace EMS2.Controllers
         {
             _context = context;
             _manager = new PatientManager(context);
-                        
         }
-
-        // GET: api/Patients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Patient>>> GetPatients()
+        public IActionResult Index()
         {
-            return await _manager.GetMembers("1234567890KV");
-            return await _context.Patients.ToListAsync();
-            
+            return View();
         }
-
-        // GET: api/Patients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetPatient(string id)
+        [HttpGet]
+        public IActionResult Search()
         {
-            var patient = _manager.GetMember(id);
-
-            if (patient == null)
+            return View();
+        }
+        [HttpGet]
+        public async Task<ActionResult<Patient>> SearchPatient(string hcn)
+        {
+            var patients = await _manager.GetPatient(hcn);
+            if (patients == null)
             {
                 return NotFound();
             }
 
-            return patient;
+            return View("SearchResult", patients);
         }
 
-        // PUT: api/Patients/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPatient(string id, Patient patient)
+        [HttpGet]
+        public IActionResult Register()
         {
-            if (id != patient.HCN)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(patient).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PatientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return View();
         }
-
-        // POST: api/Patients
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Patient>> PostPatient(Patient patient)
+        public async Task<ActionResult<Patient>> Register(Patient patient)
         {
             _context.Patients.Add(patient);
             try
@@ -106,7 +71,62 @@ namespace EMS2.Controllers
             return CreatedAtAction("GetPatient", new { id = patient.HCN }, patient);
         }
 
-        // DELETE: api/Patients/5
+
+        [HttpGet]
+        public async Task<IActionResult> Update(string hcn)
+        {
+             return View(await _manager.GetPatient(hcn));
+        }
+        public async Task<IActionResult> UpdatePatient(Patient patient)
+        {
+            /*if (id != patient.HCN)
+            {
+                return BadRequest();
+            }*/
+
+            _context.Entry(patient).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PatientExists(patient.HCN))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return View("Index");
+        }
+
+       
+
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetMembers(string hcn)
+        {
+            var patients = await _manager.GetMembers(hcn);
+
+            if (patients == null)
+            {
+                return NotFound();
+            }
+
+            return patients;
+        }
+
+
+        
+        
+
+        
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Patient>> DeletePatient(string id)
         {
