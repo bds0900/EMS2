@@ -91,11 +91,11 @@ namespace EMS2.Controllers
             }
             else if(vm.Double)
             {
-                return await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1,vm.PatientID2);
+                return View("AppointmentResult",await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1,vm.PatientID2));
             }
             else
             {
-                return await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1);
+                return View("AppointmentResult",await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1));
             }
 
             return NoContent();
