@@ -1,22 +1,30 @@
 ﻿@model EMS2.Models.AppointmentViewModel
 
-<form asp-controller="Appointments" asp-action="ScheduleAppointment" method="post">
+<form asp-controller="Appointments" asp-action="CreateAppointment" method="post">
     <div>
         <label asp-for="AppointmentDate">Appointment date</label>
         <input asp-for="AppointmentDate" />
+        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+
     </div>
     <div>
         <label asp-for="AppointmentSlot">Appointment Slot</label>
         <input asp-for="AppointmentSlot" />
+        <span asp-validation-for="AppointmentSlot" class="text-danger"></span>
+
     </div>
     <div>
         <label asp-for="PatientID1">Patient</label>
         <input asp-for="PatientID1" />
+        <span asp-validation-for="PatientID1" class="text-danger"></span>
+
     </div>
     <div>
         <label asp-for="PatientID2">Patient2</label>
         <input asp-for="PatientID2" />
-        <input type="checkbox" asp-for="Double"/>
+        <input type="checkbox" asp-for="Double" />
+        <span asp-validation-for="PatientID2" class="text-danger"></span>
+
     </div>
 
     <button type="submit">Appointment</button>
