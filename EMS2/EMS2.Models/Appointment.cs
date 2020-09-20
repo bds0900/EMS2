@@ -10,7 +10,13 @@ namespace EMS2.Models
     {
         [Key]
         public string AppointmentID { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
         public DateTime AppointmentDate { get; set; }
+
+        [Required]
+        [Range(1,6)]
         public int AppointmentSlot { get; set; }
         public bool Encounter { get; set; }
         public Appointment NextAppointment { get; set; }
