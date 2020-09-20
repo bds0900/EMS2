@@ -31,10 +31,11 @@ namespace EMS2.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public async Task<ActionResult<Patient>> SearchPatient(string hcn)
         {
-            var patients = await _manager.GetPatient(hcn);
+            var patients = await _context.Patients.FindAsync(hcn);
             if (patients == null)
             {
                 return NotFound();
@@ -51,6 +52,32 @@ namespace EMS2.Controllers
         [HttpPost]
         public async Task<ActionResult<Patient>> Register(Patient patient)
         {
+            if (!String.IsNullOrEmpty(patient.HeadOfHouse))
+            {
+                var headOfHouse = _context.Patients.Find(patient.HeadOfHouse);
+                if (headOfHouse != null)
+                {
+                    patient.AddressLine1 = headOfHouse.AddressLine1;
+                    patient.AddressLine2 = headOfHouse.AddressLine2;
+                    patient.City = headOfHouse.City;
+                    patient.Province = headOfHouse.Province;
+                    patient.PostalCode = headOfHouse.PostalCode;
+                    patient.PhoneNumber = headOfHouse.PhoneNumber;
+
+                    ModelState.MarkFieldValid("HeadOfHouse");
+                }
+                else
+                {
+                    ModelState.AddModelError("HeadOfHouse", $"can not find the Head of House {patient.HCN}");
+                }
+            }
+
+
+            if (!ModelState.IsValid)
+            {
+                return View(patient);
+            }
+        
             _context.Patients.Add(patient);
             try
             {
@@ -75,8 +102,9 @@ namespace EMS2.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(string hcn)
         {
-             return View(await _manager.GetPatient(hcn));
+            return View(await _manager.GetPatient(hcn));
         }
+
         public async Task<IActionResult> UpdatePatient(Patient patient)
         {
             /*if (id != patient.HCN)
@@ -105,27 +133,14 @@ namespace EMS2.Controllers
             return View("Index");
         }
 
-       
+
 
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Patient>>> GetMembers(string hcn)
         {
-            var patients = await _manager.GetMembers(hcn);
-
-            if (patients == null)
-            {
-                return NotFound();
-            }
-
-            return patients;
+            return await _context.Patients.Where(p => p.HeadOfHouse == hcn).ToListAsync();
         }
-
-
-        
-        
-
-        
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<Patient>> DeletePatient(string id)
