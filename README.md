@@ -8,6 +8,7 @@ Electronic Medical System is a system that will be capable of *registering patie
  * [x] Search Patient by ID
  * [x] Search Patient by Name
  * [x] Update Patient Info
+ * [x] Input validation
  * [ ] Delete Patient
 
 ### Appointment
