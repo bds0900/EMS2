@@ -33,10 +33,22 @@ namespace EMS2.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Patient>> SearchPatient(string hcn)
+        public async Task<ActionResult<Patient>> SearchPatientById(string hcn)
         {
             var patients = await _context.Patients.FindAsync(hcn);
             if (patients == null)
+            {
+                return NotFound();
+            }
+
+            return View("SearchResultDetail", patients);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<Patient>> SearchPatientByName(string FirstName,string LastName)
+        {
+            List<Patient> patients = await _context.Patients.Where(p => p.FirstName == FirstName && p.LastName==LastName).ToListAsync() ;
+            if (patients.Count == 0)
             {
                 return NotFound();
             }
