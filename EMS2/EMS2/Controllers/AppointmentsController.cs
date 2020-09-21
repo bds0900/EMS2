@@ -9,6 +9,7 @@ using EMS2.Models;
 using EMS2.Data;
 using EMS2.Scheduling;
 using EMS2.Demographics;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EMS2.Controllers
 {
@@ -70,24 +71,25 @@ namespace EMS2.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Appointment>> ScheduleAppointment(AppointmentViewModel vm)
+        public async Task<ActionResult<Appointment>> CreateAppointment(AppointmentViewModel vm)
         {
             if (validator.IsWeekend(vm.AppointmentDate) && vm.AppointmentSlot > 2)
                 ModelState.AddModelError("AppointmentSlot", $" { vm.AppointmentSlot} is not applicable on week end.");
 
             if (!validator.IsValidDay(vm.AppointmentDate))
                 ModelState.AddModelError("AppointmentDate", $" { vm.AppointmentDate} is earlier than today or later than 3 month from today.");
+                
 
             if (!validator.IsEmptySlot(vm.AppointmentDate, vm.AppointmentSlot).Result)
                 ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { vm.AppointmentSlot} is occupied.");
-            
+                       
             if(!await patientValidator.IsValidID(vm.PatientID1))
             {
                 ModelState.AddModelError("PatientID1", $" PatientID1 is not valid.");
             }
             else if (vm.Double && !await patientValidator.IsValidID(vm.PatientID2))
             {
-                ModelState.AddModelError("PatientID1", $" PatientID1 is not valid.");
+                ModelState.AddModelError("PatientID2", $" PatientID2 is not valid.");
             }
             else if(vm.Double)
             {
@@ -98,7 +100,7 @@ namespace EMS2.Controllers
                 return View("AppointmentResult",await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1));
             }
 
-            return NoContent();
+            return View();
         }
 
         // DELETE: api/Appointments/5
