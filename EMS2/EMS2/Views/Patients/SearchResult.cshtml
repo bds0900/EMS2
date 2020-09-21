@@ -2,18 +2,32 @@
 @{
     var props = Model.GetType().GetProperties();
 }
-
-@foreach (var prop in props)
-{
-    <div >
-        <span>@prop.Name</span> :
-        <span>@prop.GetValue(Model)</span>
+<div class="card" style="width: 65%; margin:auto;">
+    <div class="card-header bg-primary">
+        <h5 class="text-white text-center text-uppercase">Search Result</h5>
     </div>
-}
-<div>
-    <a asp-controller="Patients" asp-action="Update"
-       asp-route-hcn="@Model.HCN">Update</a>
-</div>
-<div>
-    <a asp-controller="Home" asp-action="Index">Go to Main</a>
+    <div class="card-body">
+        @foreach (var prop in props)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <span>@prop.Name</span> :
+                        <textbox class="form-control">@prop.GetValue(Model)</textbox>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <a asp-controller="Patients" asp-action="Update"
+               asp-route-hcn="@Model.HCN">Update</a>
+        </div>
+        <div class="col-md-6">
+            <a asp-controller="Home" asp-action="Index">Go to Main</a>
+
+        </div>
+    </div>
 </div>
