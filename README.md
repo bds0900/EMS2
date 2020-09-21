@@ -17,3 +17,4 @@ Electronic Medical System is a system that will be capable of *registering patie
 
 ### Billing
   * [ ] Generate monthly billing file
+  * [ ] Monthly billing summary
