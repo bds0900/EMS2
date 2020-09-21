@@ -32,11 +32,11 @@ namespace EMS2
                         patient = new Patient
                         {
                             HCN = "1234567890KV",
-                            LastName = "Doosan",
-                            FirstName = "Beak",
+                            LastName = "Beak",
+                            FirstName = "Doosan",
                             DateBirth = new DateTime(1990, 9, 15),
                             Sex = SEX.M,
-                            AddressLine1 = "300C Bluevlae North Street",
+                            AddressLine1 = "300C Bluevale North Street",
                             AddressLine2 = "",
                             City = "Waterloo",
                             Province = "ON",
