@@ -1,33 +1,42 @@
-﻿@model EMS2.Models.Patient
-@{
-    var props = Model.GetType().GetProperties();
-}
+﻿@model List<EMS2.Models.Patient>
+
+
 <div class="card" style="width: 65%; margin:auto;">
     <div class="card-header bg-primary">
         <h5 class="text-white text-center text-uppercase">Search Result</h5>
     </div>
     <div class="card-body">
-        @foreach (var prop in props)
+        @foreach (var item in Model)
         {
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <span>@prop.Name</span> :
-                        <textbox class="form-control">@prop.GetValue(Model)</textbox>
-                    </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>HCN</label>
+                    <textbox class="form-control">@item.HCN</textbox>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>First Name</label>
+                    <textbox class="form-control">@item.FirstName</textbox>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <textbox class="form-control">@item.LastName</textbox>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Detail</label>
+                    <button>
+                        <a asp-controller="Patients" asp-action="SearchPatientById"
+                           asp-route-hcn="@item.HCN">detail</a>
+                    </button>
+                </div>
+            </div>
+        </div>
         }
-    </div>
-    <div class="row">
-
-        <div class="col-md-6">
-            <a asp-controller="Patients" asp-action="Update"
-               asp-route-hcn="@Model.HCN">Update</a>
-        </div>
-        <div class="col-md-6">
-            <a asp-controller="Home" asp-action="Index">Go to Main</a>
-
-        </div>
     </div>
 </div>

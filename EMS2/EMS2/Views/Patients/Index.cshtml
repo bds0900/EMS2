@@ -1,4 +1,68 @@
-﻿<div>Patient index page</div>
-<a asp-controller="Patients" asp-action="Search">Search</a>
-<a asp-controller="Patients" asp-action="Register">Register</a>
-<a asp-controller="Patients" asp-action="Search">Update</a>
+﻿
+@section Styles {
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/gijgo@1.9.6/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+}
+
+<div class="card" style="width: 65%; margin:auto;">
+    <div class="card-header bg-primary">
+        <h4 class="text-white text-center text-uppercase"> Patient index page</h4>
+    </div>
+</div>
+<form asp-controller="Patients" asp-action="SearchPatientById" method="get">
+    <div class="card" style="width: 65%; margin:auto;">
+        <div class="card-header bg-primary">
+            <h5 class="text-white text-center text-uppercase">Search Patient by ID</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Health Card Number</label>
+                        <input type="text" name="hcn" value="" />
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; ">
+                <button type="submit" class="btn btn-primary">Find</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<form asp-controller="Patients" asp-action="SearchPatientByName" method="get">
+    <div class="card" style="width: 65%; margin:auto;">
+        <div class="card-header bg-primary">
+            <h5 class="text-white text-center text-uppercase">Search Patient by Name</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" name="FirstName" value="" />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" name="LastName" value="" />
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; ">
+                <button type="submit" class="btn btn-primary">Find</button>
+            </div>
+        </div>
+    </div>
+</form>
+<br/>
+<br/>
+<br/>
+<br/>
+<div style="text-align:center">
+    <h4>Register Patient</h4>
+    <button style="text-align:center">
+        <a asp-controller="Patients" asp-action="Register">Register</a>
+    </button>
+</div>
