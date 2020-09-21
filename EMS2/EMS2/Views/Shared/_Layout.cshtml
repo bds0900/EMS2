@@ -1,18 +1,32 @@
 ﻿@*
-Layout pages are typically named _Layout.cshtml, the leading underscore preventing them from being browsed directly.
-By default, every layout must call RenderBody. 
-Wherever the call to RenderBody is placed, the contents of the view will be rendered.
+    Layout pages are typically named _Layout.cshtml, the leading underscore preventing them from being browsed directly.
+    By default, every layout must call RenderBody.
+    Wherever the call to RenderBody is placed, the contents of the view will be rendered.
 *@
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
-    <link href="/css/site.css" rel="stylesheet" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - EMS2</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
 </head>
 <body>
-    @RenderBody()
+    <div class="container">
+        @RenderBody()
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js"></script>
+    @if (IsSectionDefined("Scripts"))
+    {
+        @RenderSection("Scripts");
+    }
+    @if (IsSectionDefined("Styles"))
+    {
+        @RenderSection(name: "Styles");
+    }
 </body>
-</html>
+</html>  
