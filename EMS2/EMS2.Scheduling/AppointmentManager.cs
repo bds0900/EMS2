@@ -18,33 +18,44 @@ namespace EMS2.Scheduling
         public async Task<List<Appointment>> GetAllAppointments(string patientID)
         {
             return await (from appt in _context.Appointments
-                         join schedule in _context.Schedules on appt.AppointmentID equals schedule.AppointmentID
-                         select appt)
+                          join schedule in _context.Schedules on appt.AppointmentID equals schedule.AppointmentID
+                          where schedule.PatientID == patientID
+                          select appt)
                          .ToListAsync();
         }
         public async Task<List<Appointment>> GetAppointments(string patientID)
         {
             return await (from appt in _context.Appointments
                           join schedule in _context.Schedules on appt.AppointmentID equals schedule.AppointmentID
-                          where DateTime.Compare(appt.AppointmentDate,DateTime.Today)>=0
+                          where DateTime.Compare(appt.AppointmentDate, DateTime.Today) >= 0
+                          where schedule.PatientID == patientID
                           select appt)
                          .ToListAsync();
         }
-        public async Task<Appointment> ScheduleAppointment(DateTime date,int slot,string patientID)
+        public async Task<List<Appointment>> SearchAppointmentByName(string firstName, string lastName)
+        {
+            return await (from appt in _context.Appointments
+                          join schedule in _context.Schedules on appt.AppointmentID equals schedule.AppointmentID
+                          join patient in _context.Patients on schedule.PatientID equals patient.HCN
+                          where patient.FirstName == firstName && patient.LastName == lastName
+                          select appt)
+                        .ToListAsync();
+        }
+        public async Task<Appointment> ScheduleAppointment(DateTime date, int slot, string patientID)
         {
             Appointment appointment = new Appointment
             {
                 AppointmentID = Guid.NewGuid().ToString(),
                 AppointmentDate = date,
-                AppointmentSlot=slot,
-                Encounter=false
+                AppointmentSlot = slot,
+                Encounter = false
             };
 
-            Schedule schedule = new Schedule 
+            Schedule schedule = new Schedule
             {
-                ScheduleID = Guid.NewGuid().ToString(), 
-                AppointmentID= appointment.AppointmentID, 
-                PatientID=patientID 
+                ScheduleID = Guid.NewGuid().ToString(),
+                AppointmentID = appointment.AppointmentID,
+                PatientID = patientID
             };
             await _context.Appointments.AddAsync(appointment);
             await _context.Schedules.AddAsync(schedule);
@@ -52,10 +63,10 @@ namespace EMS2.Scheduling
             return appointment;
 
         }
-        public async Task<Appointment> ScheduleAppointment(DateTime date, int slot, string patientID,string patientID2)
+        public async Task<Appointment> ScheduleAppointment(DateTime date, int slot, string patientID, string patientID2)
         {
 
-            var appointment=await ScheduleAppointment(date, slot, patientID);
+            var appointment = await ScheduleAppointment(date, slot, patientID);
             Schedule schedule = new Schedule
             {
                 ScheduleID = Guid.NewGuid().ToString(),
