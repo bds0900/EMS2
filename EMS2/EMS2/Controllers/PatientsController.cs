@@ -48,11 +48,6 @@ namespace EMS2.Controllers
         public async Task<ActionResult<Patient>> SearchPatientByName(string FirstName,string LastName)
         {
             List<Patient> patients = await _context.Patients.Where(p => p.FirstName == FirstName && p.LastName==LastName).ToListAsync() ;
-            if (patients.Count == 0)
-            {
-                return NotFound();
-            }
-
             return View("SearchResult", patients);
         }
 

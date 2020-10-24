@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EMS2.Controllers
 {
-    [Route("[controller]")]
     public class AppointmentsController : Controller
     {
         private readonly EMSContext _context;
@@ -31,13 +30,23 @@ namespace EMS2.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View("CreateAppointment");
+            return View();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAppointments(string patientID)
         {
-            return await manager.GetAllAppointments(patientID);
+            return View("SearchResult", await manager.GetAppointments(patientID));
+        }
+        [HttpGet]
+        public async Task<Appointment> SearchAppointmentById(string id)
+        {
+            return await _context.Appointments.FindAsync(id);
+        }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Appointment>>> SearchAppointmentByName(string firstName,string lastName)
+        {
+            return View("SearchResult",await manager.SearchAppointmentByName(firstName, lastName));
         }
 
 
@@ -70,6 +79,12 @@ namespace EMS2.Controllers
             return NoContent();
         }
 
+        [HttpGet]
+        public IActionResult CreateAppointment()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult<Appointment>> CreateAppointment(AppointmentViewModel vm)
         {
@@ -78,12 +93,12 @@ namespace EMS2.Controllers
 
             if (!validator.IsValidDay(vm.AppointmentDate))
                 ModelState.AddModelError("AppointmentDate", $" { vm.AppointmentDate} is earlier than today or later than 3 month from today.");
-                
+
 
             if (!validator.IsEmptySlot(vm.AppointmentDate, vm.AppointmentSlot).Result)
                 ModelState.AddModelError("AppointmentSlot", $"AppointmentSlot { vm.AppointmentSlot} is occupied.");
-                       
-            if(!await patientValidator.IsValidID(vm.PatientID1))
+
+            if (!await patientValidator.IsValidID(vm.PatientID1))
             {
                 ModelState.AddModelError("PatientID1", $" PatientID1 is not valid.");
             }
@@ -91,16 +106,19 @@ namespace EMS2.Controllers
             {
                 ModelState.AddModelError("PatientID2", $" PatientID2 is not valid.");
             }
-            else if(vm.Double)
-            {
-                return View("AppointmentResult",await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1,vm.PatientID2));
-            }
-            else
-            {
-                return View("AppointmentResult",await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1));
-            }
 
-            return View();
+            if (ModelState.IsValid)
+            {
+                if (vm.Double)
+                {
+                    return View("AppointmentResult", await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1, vm.PatientID2));
+                }
+                else
+                {
+                    return View("AppointmentResult", await manager.ScheduleAppointment(vm.AppointmentDate, vm.AppointmentSlot, vm.PatientID1));
+                }
+            }
+            return View("CreateAppointment", vm);
         }
 
         // DELETE: api/Appointments/5
