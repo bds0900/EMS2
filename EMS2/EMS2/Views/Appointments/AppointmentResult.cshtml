@@ -1,10 +1,20 @@
 ﻿@model EMS2.Models.Appointment
 
 <div>
-    <div>ID</div>
-    @Model.AppointmentID
-    <div>Date</div>
-    @Model.AppointmentDate
-    <div>Slot</div>
-    @Model.AppointmentSlot
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Date</label>
+                <textbox class="form-control">@Model.AppointmentDate.ToShortDateString()</textbox>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Slot</label>
+                <textbox class="form-control">@Model.AppointmentSlot</textbox>
+            </div>
+        </div>
+    </div>
+</div>
 </div>

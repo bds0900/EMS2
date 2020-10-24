@@ -1,31 +1,67 @@
 ﻿@model EMS2.Models.AppointmentViewModel
-
+@{ 
+    var option = new SelectList(Enumerable.Range(1, 6));
+}
 <form asp-controller="Appointments" asp-action="CreateAppointment" method="post">
     <div>
         <label asp-for="AppointmentDate">Appointment date</label>
-        <input asp-for="AppointmentDate" />
+        <input asp-for="AppointmentDate" onchange="handleDate(this)"/>
         <span asp-validation-for="AppointmentDate" class="text-danger"></span>
-
     </div>
     <div>
         <label asp-for="AppointmentSlot">Appointment Slot</label>
-        <input asp-for="AppointmentSlot" />
+        <select id="select" asp-for="AppointmentSlot" asp-items="option"></select>
         <span asp-validation-for="AppointmentSlot" class="text-danger"></span>
-
     </div>
     <div>
         <label asp-for="PatientID1">Patient</label>
         <input asp-for="PatientID1" />
         <span asp-validation-for="PatientID1" class="text-danger"></span>
-
     </div>
-    <div>
-        <label asp-for="PatientID2">Patient2</label>
+    <div id="patientId2" hidden>
+        <label asp-for="PatientID2">Care Giver</label>
         <input asp-for="PatientID2" />
-        <input type="checkbox" asp-for="Double" />
         <span asp-validation-for="PatientID2" class="text-danger"></span>
+    </div>
 
+    <div>
+        <input id="check" type="checkbox" asp-for="Double" onclick="handleClick(this)" />
+        <label asp-for="Double">Please check if patient and care giver see the physician at the same time</label>
     </div>
 
     <button type="submit">Appointment</button>
+
+    <script type="text/javascript">
+        function handleClick(e) {
+            document.getElementById("patientId2").hidden = e.checked ? false : true;
+        }
+        function handleDate(e) {
+            var d = e.value.split('-');
+            var date = new Date(d[0],d[1]-1,d[2]);
+            var day = date.getDay();
+            var selection = document.getElementById("select");
+            var parent = select.parentNode;
+            var newSelection;
+            if (day == 0 || day == 6) {
+                newSelection = genOption(2);
+            } else {
+                newSelection = genOption(6);
+            }
+            parent.insertBefore(newSelection, selection);
+            parent.removeChild(selection);
+        }
+        function genOption(num) {
+            var x = document.createElement("SELECT");
+            x.id = "select";
+            x.name="AppointmentSlot"
+            for (let i = 1; i <= num; i++) {
+                var option = document.createElement("option");
+                option.value = i;
+                option.text = i;
+                x.add(option);
+            }
+            return x;
+        }
+
+    </script>
 </form>

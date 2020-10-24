@@ -1,5 +1,4 @@
-﻿@model List<EMS2.Models.Patient>
-
+﻿@model List<EMS2.Models.Appointment>
 
 <div class="card" style="width: 65%; margin:auto;">
     <div class="card-header bg-primary">
@@ -16,34 +15,33 @@
         }
         else
         {
-
             @foreach (var item in Model)
             {
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>HCN</label>
-                            <textbox class="form-control">@item.HCN</textbox>
+                            <label>Date</label>
+                            <textbox class="form-control">@item.AppointmentDate.ToShortDateString()</textbox>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>First Name</label>
-                            <textbox class="form-control">@item.FirstName</textbox>
+                            <label>Slot</label>
+                            <textbox class="form-control">@item.AppointmentSlot</textbox>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Last Name</label>
-                            <textbox class="form-control">@item.LastName</textbox>
+                            <label>Encounter</label>
+                            <textbox class="form-control">@item.Encounter</textbox>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
                             <label>Detail</label>
                             <button>
-                                <a asp-controller="Patients" asp-action="SearchPatientById"
-                                   asp-route-hcn="@item.HCN">detail</a>
+                                <a asp-controller="Appointments" asp-action="SearchAppointmentById"
+                                   asp-route-id="@item.AppointmentID">detail</a>
                             </button>
                         </div>
                     </div>

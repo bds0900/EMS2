@@ -2,20 +2,20 @@
 
 <div class="card" style="width: 65%; margin:auto;">
     <div class="card-header bg-primary">
-        <h4 class="text-white text-center text-uppercase"> Patient </h4>
+        <h4 class="text-white text-center text-uppercase"> Appointment </h4>
     </div>
 </div>
-<form asp-controller="Patients" asp-action="SearchPatientById" method="get">
+<form asp-controller="Appointments" asp-action="GetAppointments" method="get">
     <div class="card" style="width: 65%; margin:auto;">
         <div class="card-header bg-primary">
-            <h5 class="text-white text-center text-uppercase">Search Patient by ID</h5>
+            <h5 class="text-white text-center text-uppercase">Search Appointment by HCN</h5>
         </div>
         <div class="card-body" style="text-align: center; ">
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
                         <label>Health Card Number</label>
-                        <input type="text" name="hcn" value="" />
+                        <input type="text" name="patientID" value="" />
                     </div>
                 </div>
             </div>
@@ -26,10 +26,10 @@
     </div>
 </form>
 
-<form asp-controller="Patients" asp-action="SearchPatientByName" method="get">
+<form asp-controller="Appointments" asp-action="SearchAppointmentByName" method="get">
     <div class="card" style="width: 65%; margin:auto;">
         <div class="card-header bg-primary">
-            <h5 class="text-white text-center text-uppercase">Search Patient by Name</h5>
+            <h5 class="text-white text-center text-uppercase">Search Appointment by Name</h5>
         </div>
         <div class="card-body">
             <div class="row">
@@ -52,11 +52,11 @@
         </div>
     </div>
 </form>
-<br/>
-<br/>
+<br />
+<br />
 <div style="text-align:center">
-    <h4>Register Patient</h4>
+    <h4>Make an appointment</h4>
     <button style="text-align:center">
-        <a asp-controller="Patients" asp-action="Register">Register</a>
+        <a asp-controller="Appointments" asp-action="CreateAppointment">Appointment</a>
     </button>
 </div>
